@@ -8,7 +8,7 @@ pipeline {
     parameters {
         string(name: 'REPOSITORIES', defaultValue: '', description: 'Comma-separated list of repositories to update')
         string(name: 'RELEASE_BRANCH', defaultValue: '', description: 'Release branch to create')
-        
+
         string(name: 'GIT_AUTHOR', defaultValue: 'kiegroup', description: 'Which Git author repository ?')
         string(name: 'GIT_AUTHOR_CREDS_ID', defaultValue: 'kie-ci', description: 'Git author credentials id')
     }
