@@ -11,6 +11,8 @@ pipeline {
 
         string(name: 'GIT_AUTHOR', defaultValue: 'kiegroup', description: 'Which Git author repository ?')
         string(name: 'GIT_AUTHOR_CREDS_ID', defaultValue: 'kie-ci', description: 'Git author credentials id')
+
+        string(name: 'GIT_BASE_BRANCH', defaultValue: 'master', description: 'Git base to create a new release branch upon')
     }
 
     stages {
@@ -36,7 +38,7 @@ pipeline {
                         echo "Checkout repo ${repo}"
                         dir(repo){
                             deleteDir()
-                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), 'master', false))
+                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), getGitBase(repo), false))
                             sh 'git fetch origin'
                             String branchRemoteResult = sh(script: "git ls-remote origin ${getReleaseBranch()} | wc -l", returnStdout: true).trim()
                             if(Integer.parseInt(branchRemoteResult) > 0){
@@ -73,4 +75,13 @@ String getGitAuthorCredsId(){
 
 String[] getRepositories(){
     return params.REPOSITORIES.split(',')
+}
+
+String getGitBase(String repo){
+    if(repo.find("/")){
+        String [] repo_coordinates = repo.split("/")
+        assert (repo_coordinates[1] != null)
+        GIT_BASE_BRANCH = repo_coordinates[1];
+    }
+    return GIT_BASE_BRANCH;
 }
