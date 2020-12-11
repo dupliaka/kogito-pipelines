@@ -56,7 +56,7 @@ pipeline {
 
     environment {
         //KOGITO_CI_EMAIL_TO = credentials('KOGITO_CI_EMAIL_TO')
-        KOGITO_CI_EMAIL_TO = credentials('DUPLIAKA_EMAIL')
+        KOGITO_CI_EMAIL_TO = "adupliak@redhat.com"
 
         // RELEASE_BRANCH => will be set in Initialization phase
 
