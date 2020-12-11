@@ -173,6 +173,7 @@ pipeline {
             }
         }
 
+    }
 }
 
 def buildJob(String jobName, List buildParams) {
