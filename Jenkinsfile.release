@@ -81,7 +81,7 @@ pipeline {
         GITHUB_TOKEN_CREDS_ID='kie-ci2-token' // secret text creds
         */
         GIT_AUTHOR='dupliaka'
-        GIT_AUTHOR_CREDS_ID = 'dupliaka' // username/password creds
+        GIT_AUTHOR_CREDS_ID ='dupliaka' // username/password creds
         BOT_AUTHOR='dupliaka-gh-bot'
         BOT_AUTHOR_CREDS_ID='dupliaka-gh-bot' // username/password creds
         GITHUB_TOKEN_CREDS_ID='dupliaka_gh_token' // secret text creds

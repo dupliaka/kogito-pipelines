@@ -1,4 +1,4 @@
-@Library('jenkins-pipeline-shared-libraries')_
+@Library('jenkins-pipeline-shared-libraries') _
 
 pipeline {
     agent {
@@ -13,6 +13,9 @@ pipeline {
         string(name: 'GIT_AUTHOR_CREDS_ID', defaultValue: 'kie-ci', description: 'Git author credentials id')
 
         string(name: 'GIT_BASE_BRANCH', defaultValue: 'master', description: 'Git base to create a new release branch upon')
+    }
+    environment {
+        BRANCH_FOR_LATEST = 'master'
     }
 
     stages {
@@ -34,14 +37,14 @@ pipeline {
                 script {
                     echo 'Create release branches'
 
-                    for(String repo : getRepositories()){
+                    for (String repo : getRepositories()) {
                         echo "Checkout repo ${repo}"
-                        dir(repo){
+                        dir(repo) {
                             deleteDir()
-                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), getGitBase(repo), false))
+                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), getBranch(repo), false))
                             sh 'git fetch origin'
                             String branchRemoteResult = sh(script: "git ls-remote origin ${getReleaseBranch()} | wc -l", returnStdout: true).trim()
-                            if(Integer.parseInt(branchRemoteResult) > 0){
+                            if (Integer.parseInt(branchRemoteResult) > 0) {
                                 echo 'Release branch already exist ... will not create it'
                             } else {
                                 echo "Release branch ${getReleaseBranch()} does not exist ... gonna create it"
@@ -61,27 +64,33 @@ pipeline {
     }
 }
 
-String getReleaseBranch(){
+String getReleaseBranch() {
     return params.RELEASE_BRANCH
 }
 
-String getGitAuthor(){
+String getGitAuthor() {
     return params.GIT_AUTHOR
 }
 
-String getGitAuthorCredsId(){
+String getGitAuthorCredsId() {
     return params.GIT_AUTHOR_CREDS_ID
 }
 
-String[] getRepositories(){
+String[] getRepositories() {
     return params.REPOSITORIES.split(',')
 }
 
-String getGitBase(String repo){
-    if(repo.find("/")){
-        String [] repo_coordinates = repo.split("/")
+String getBranch(String repo) {
+    return (params.GIT_BASE_BRANCH)?:parseGitBase(repo);
+}
+
+String parseGitBase(String repo) {
+    if (repo.find("/")) {
+        String[] repo_coordinates = repo.split("/")
         assert (repo_coordinates[1] != null)
-        GIT_BASE_BRANCH = repo_coordinates[1];
+        return repo_coordinates[1];
     }
-    return GIT_BASE_BRANCH;
+    else {
+        return env.BRANCH_FOR_LATEST;
+    }
 }
