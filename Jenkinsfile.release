@@ -392,5 +392,5 @@ String removeVersionSuffixIfExist(String version){
     return "${versionSplit[0]}.${versionSplit[1]}.${versionSplit[2]}"
 }
 String getCustomBases(){
-    return params.CUSTOM_BASES.toMapString()
+    return CUSTOM_BASES.toMapString()
 }
