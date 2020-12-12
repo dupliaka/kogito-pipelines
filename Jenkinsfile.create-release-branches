@@ -12,7 +12,7 @@ pipeline {
         string(name: 'GIT_AUTHOR', defaultValue: 'kiegroup', description: 'Which Git author repository ?')
         string(name: 'GIT_AUTHOR_CREDS_ID', defaultValue: 'kie-ci', description: 'Git author credentials id')
 
-        string(name: 'GIT_BASE_BRANCH', defaultValue: 'master', description: 'Git base to create a new release branch upon')
+        string(name: 'OPTAPLANNER_QUICKSTARTS_BASE', defaultValue: 'development', description: 'Base to create a release branch upon')
     }
     environment {
         BRANCH_FOR_LATEST = 'master'
@@ -81,16 +81,5 @@ String[] getRepositories() {
 }
 
 String getBranch(String repo) {
-    return (params.GIT_BASE_BRANCH)?:parseGitBase(repo);
-}
-
-String parseGitBase(String repo) {
-    if (repo.find("/")) {
-        String[] repo_coordinates = repo.split("/")
-        assert (repo_coordinates[1] != null)
-        return repo_coordinates[1];
-    }
-    else {
-        return env.BRANCH_FOR_LATEST;
-    }
+    return (params.OPTAPLANNER_QUICKSTARTS_BASE)?:env.BRANCH_FOR_LATEST;
 }
