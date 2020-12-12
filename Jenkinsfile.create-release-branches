@@ -87,8 +87,8 @@ String getBranch(String repo) {
 
 def getCustomBasesMap() {
     def mapCustomBases=[:]
-    if (param.CUSTOM_BASES) {
-        mapCustomBases = param.CUSTOM_BASES[1..-2]
+    if (params.CUSTOM_BASES) {
+        mapCustomBases = params.CUSTOM_BASES[1..-2]
                 .split(', ')
                 .collectEntries { entry ->
                     def pair = entry.split(':')
