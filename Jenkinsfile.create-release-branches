@@ -82,7 +82,6 @@ String[] getRepositories() {
 }
 
 String getBranch(String repo) {
-    echo "Customized bases " ${env.CUSTOM_BASES}
     return (env.CUSTOM_BASES && env.CUSTOM_BASES.containsKey(repo))?env.CUSTOM_BASES.get(repo):env.BASE_BRANCH;
 }
 
