@@ -12,10 +12,11 @@ pipeline {
         string(name: 'GIT_AUTHOR', defaultValue: 'kiegroup', description: 'Which Git author repository ?')
         string(name: 'GIT_AUTHOR_CREDS_ID', defaultValue: 'kie-ci', description: 'Git author credentials id')
 
-        string(name: 'OPTAPLANNER_QUICKSTARTS_BASE', defaultValue: 'development', description: 'Base to create a release branch upon')
+        string(name: 'CUSTOM_BASES', defaultValue: '', description: 'Comma-separated list of custom bases in format repo:base')
     }
     environment {
-        BRANCH_FOR_LATEST = 'master'
+        BASE_BRANCH = 'master'
+        CUSTOM_BASES = [:]
     }
 
     stages {
@@ -28,6 +29,7 @@ pipeline {
 
                     currentBuild.displayName = "${getReleaseBranch()}"
                     currentBuild.description = "${getRepositories()}"
+                    env.CUSTOM_BASES = getCustomBasesMap()
                 }
             }
         }
@@ -81,5 +83,18 @@ String[] getRepositories() {
 }
 
 String getBranch(String repo) {
-    return (params.OPTAPLANNER_QUICKSTARTS_BASE)?:env.BRANCH_FOR_LATEST;
+    return (env.CUSTOM_BASES.containsKey(repo))?env.CUSTOM_BASES.get(repo):env.BASE_BRANCH;
+}
+
+def getCustomBasesMap() {
+    def mapCustomBases=[:]
+    if (param.CUSTOM_BASES) {
+        mapCustomBases = param.CUSTOM_BASES[1..-2]
+                .split(', ')
+                .collectEntries { entry ->
+                    def pair = entry.split(':')
+                    [(pair.first()): pair.last()]
+                }
+    }
+    return mapCustomBases
 }

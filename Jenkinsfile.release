@@ -17,6 +17,7 @@ RUNTIMES_REPOS=['kogito-runtimes','kogito-apps','kogito-examples']
 OPTAPLANNER_REPOS =['optaplanner', 'optaweb-vehicle-routing', 'optaweb-employee-rostering', 'optaplanner-quickstarts']
 IMAGES_REPOS=['kogito-images']
 OPERATOR_REPOS=['kogito-cloud-operator']
+CUSTOM_BASES=['optaplanner-quickstarts':'development','kogito-pipelines':'master']
 
 // Map of executed jobs
 // See https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html
@@ -57,7 +58,6 @@ pipeline {
     environment {
         //KOGITO_CI_EMAIL_TO = credentials('KOGITO_CI_EMAIL_TO')
         KOGITO_CI_EMAIL_TO = "adupliak@redhat.com"
-        OPTAPLANNER_QUICKSTARTS_BASE = 'development'
         // RELEASE_BRANCH => will be set in Initialization phase
 
         // We use quay as temporary registry for testing between the jobs instead of Openshift, due to https://issues.redhat.com/browse/KOGITO-2219
@@ -158,7 +158,7 @@ pipeline {
                     addStringParam(buildParams, 'RELEASE_BRANCH', getOptaPlannerReleaseBranch())
                     addStringParam(buildParams, 'GIT_AUTHOR', getGitAuthor())
                     addStringParam(buildParams, 'GIT_AUTHOR_CREDS_ID', getGitAuthorCredsId())
-                    addStringParam(buildParams, 'OPTAPLANNER_QUICKSTARTS_BASE', getGitAuthorCredsId())
+                    addStringParam(buildParams, 'CUSTOM_BASE_NAME', getCustomBases())
 
                     def repositories = []
                     if(isArtifactsDeploy()) {
@@ -390,4 +390,7 @@ String getKogitoOperatorTempTag(){
 String removeVersionSuffixIfExist(String version){
     Integer[] versionSplit = util.parseVersion(version)
     return "${versionSplit[0]}.${versionSplit[1]}.${versionSplit[2]}"
+}
+String getCustomBases(){
+    return params.CUSTOM_BASES.toMapString()
 }
