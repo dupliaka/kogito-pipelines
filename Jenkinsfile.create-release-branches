@@ -16,7 +16,7 @@ pipeline {
     }
     environment {
         BASE_BRANCH = 'master'
-        CUSTOM_BASES = [:]
+        CUSTOM_BASES = getCustomBasesMap()
     }
 
     stages {
@@ -29,7 +29,6 @@ pipeline {
 
                     currentBuild.displayName = "${getReleaseBranch()}"
                     currentBuild.description = "${getRepositories()}"
-                    env.CUSTOM_BASES = getCustomBasesMap()
                 }
             }
         }
