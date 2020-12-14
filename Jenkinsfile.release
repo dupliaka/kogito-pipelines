@@ -17,7 +17,7 @@ RUNTIMES_REPOS=['kogito-runtimes','kogito-apps','kogito-examples']
 OPTAPLANNER_REPOS =['optaplanner', 'optaweb-vehicle-routing', 'optaweb-employee-rostering', 'optaplanner-quickstarts']
 IMAGES_REPOS=['kogito-images']
 OPERATOR_REPOS=['kogito-cloud-operator']
-CUSTOM_BASES=['optaplanner-quickstarts':'development']
+NON_MASTER_BASES=['optaplanner-quickstarts':'development']
 
 // Map of executed jobs
 // See https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html
@@ -158,11 +158,13 @@ pipeline {
                     addStringParam(buildParams, 'RELEASE_BRANCH', getOptaPlannerReleaseBranch())
                     addStringParam(buildParams, 'GIT_AUTHOR', getGitAuthor())
                     addStringParam(buildParams, 'GIT_AUTHOR_CREDS_ID', getGitAuthorCredsId())
-                    addStringParam(buildParams, 'CUSTOM_BASE_NAME', getCustomBases())
+                    addStringParam(buildParams, 'NON_MASTER_BASES', getCustomBases())
 
                     def repositories = []
+                    def bases = []
                     if(isArtifactsDeploy()) {
                         repositories += OPTAPLANNER_REPOS
+                        bases += getCustomBases()
                     }
 
                     echo "Call ${CREATE_RELEASE_BRANCHES} job with repositories ${repositories}"
@@ -392,5 +394,5 @@ String removeVersionSuffixIfExist(String version){
     return "${versionSplit[0]}.${versionSplit[1]}.${versionSplit[2]}"
 }
 String getCustomBases(){
-    return CUSTOM_BASES.toMapString()
+    return NON_MASTER_BASES.toMapString()[1..-2]
 }
