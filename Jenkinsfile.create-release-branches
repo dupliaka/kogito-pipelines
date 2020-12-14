@@ -1,5 +1,7 @@
 @Library('jenkins-pipeline-shared-libraries') _
 
+CUSTOM_BASES=[:]
+
 pipeline {
     agent {
         label 'kie-rhel7 && !master'
@@ -16,7 +18,6 @@ pipeline {
     }
     environment {
         BASE_BRANCH = 'master'
-        CUSTOM_BASES = getCustomBasesMap()
     }
 
     stages {
@@ -24,11 +25,10 @@ pipeline {
             steps {
                 script {
                     echo 'Initialize'
-
                     assert getReleaseBranch() != ''
-
                     currentBuild.displayName = "${getReleaseBranch()}"
                     currentBuild.description = "${getRepositories()}"
+                    CUSTOM_BASES = getCustomBasesMap()
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
                         echo "Checkout repo ${repo}"
                         dir(repo) {
                             deleteDir()
-                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), getBranch(repo), false))
+                            checkout(githubscm.resolveRepository(repo, getGitAuthor(), getBaseBranch(repo), false))
                             sh 'git fetch origin'
                             String branchRemoteResult = sh(script: "git ls-remote origin ${getReleaseBranch()} | wc -l", returnStdout: true).trim()
                             if (Integer.parseInt(branchRemoteResult) > 0) {
@@ -81,19 +81,15 @@ String[] getRepositories() {
     return params.REPOSITORIES.split(',')
 }
 
-String getBranch(String repo) {
-    return (env.CUSTOM_BASES && env.CUSTOM_BASES.containsKey(repo))?env.CUSTOM_BASES.get(repo):env.BASE_BRANCH;
+String getBaseBranch(String repo) {
+    return (CUSTOM_BASES && CUSTOM_BASES.containsKey(repo))?CUSTOM_BASES.get(repo):env.BASE_BRANCH;
 }
 
 def getCustomBasesMap() {
-    def mapCustomBases=[:]
-    if (params.CUSTOM_BASES) {
-        mapCustomBases = params.CUSTOM_BASES[1..-2]
-                .split(', ')
-                .collectEntries { entry ->
-                    def pair = entry.split(':')
-                    [(pair.first()): pair.last()]
-                }
-    }
-    return mapCustomBases
+    return params.CUSTOM_BASES
+            .split(', ')
+            .collectEntries { entry ->
+                def pair = entry.split(':')
+                [(pair.first()): pair.last()]
+            }
 }

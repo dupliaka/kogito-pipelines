@@ -17,7 +17,7 @@ RUNTIMES_REPOS=['kogito-runtimes','kogito-apps','kogito-examples']
 OPTAPLANNER_REPOS =['optaplanner', 'optaweb-vehicle-routing', 'optaweb-employee-rostering', 'optaplanner-quickstarts']
 IMAGES_REPOS=['kogito-images']
 OPERATOR_REPOS=['kogito-cloud-operator']
-CUSTOM_BASES=['optaplanner-quickstarts':'development','kogito-pipelines':'master']
+CUSTOM_BASES=['optaplanner-quickstarts':'development']
 
 // Map of executed jobs
 // See https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html
