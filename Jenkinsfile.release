@@ -60,31 +60,44 @@ pipeline {
     }
 
     environment {
-        KOGITO_CI_EMAIL_TO = credentials('KOGITO_CI_EMAIL_TO')
-        // RELEASE_BRANCH => will be set in Initialization phase
+//        KOGITO_CI_EMAIL_TO = credentials('KOGITO_CI_EMAIL_TO')
+//        // RELEASE_BRANCH => will be set in Initialization phase
+//
+//        // We use quay as temporary registry for testing between the jobs instead of Openshift, due to https://issues.redhat.com/browse/KOGITO-2219
+//
+//        IMAGE_REGISTRY_CREDENTIALS = 'EMPTY_REGISTRY_CREDENTIALS'
+//        IMAGE_REGISTRY = 'EMPTY_REGISTRY'
+//
+//        IMAGE_NAMESPACE = 'kiegroup'
+//        // Use nightly for now with a different tag but we should find another solution
+//        IMAGE_NAME_SUFFIX = 'nightly'
+//
+//        // Credentials
+//        GIT_AUTHOR='kiegroup'
+//        GIT_AUTHOR_CREDS_ID = 'kie-ci' // username/password creds
+//        BOT_AUTHOR='bsig-gh-bot'
+//        BOT_AUTHOR_CREDS_ID='bsig-gh-bot' // username/password creds
+//        GITHUB_TOKEN_CREDS_ID='kie-ci2-token' // secret text creds
+//
+//        // Maven Nexus release parameters
+//        DEFAULT_STAGING_REPOSITORY = 'https://repository.jboss.org/nexus/content/groups/kogito-public/'
+//        NEXUS_RELEASE_URL = 'https://repository.jboss.org/nexus'
+//        NEXUS_RELEASE_REPOSITORY_ID = 'jboss-releases-repository'
+//        NEXUS_STAGING_PROFILE_ID = '2161b7b8da0080'
+//        NEXUS_BUILD_PROMOTION_PROFILE_ID = 'ea49ccd6f174'
 
-        // We use quay as temporary registry for testing between the jobs instead of Openshift, due to https://issues.redhat.com/browse/KOGITO-2219
+        //Testing
 
+        KOGITO_CI_EMAIL_TO = "adupliak@redhat.com"
         IMAGE_REGISTRY_CREDENTIALS = 'EMPTY_REGISTRY_CREDENTIALS'
         IMAGE_REGISTRY = 'EMPTY_REGISTRY'
-
         IMAGE_NAMESPACE = 'kiegroup'
-        // Use nightly for now with a different tag but we should find another solution
         IMAGE_NAME_SUFFIX = 'nightly'
-
-        // Credentials
-        GIT_AUTHOR='kiegroup'
-        GIT_AUTHOR_CREDS_ID = 'kie-ci' // username/password creds
-        BOT_AUTHOR='bsig-gh-bot'
-        BOT_AUTHOR_CREDS_ID='bsig-gh-bot' // username/password creds
-        GITHUB_TOKEN_CREDS_ID='kie-ci2-token' // secret text creds
-
-        // Maven Nexus release parameters
-        DEFAULT_STAGING_REPOSITORY = 'https://repository.jboss.org/nexus/content/groups/kogito-public/'
-        NEXUS_RELEASE_URL = 'https://repository.jboss.org/nexus'
-        NEXUS_RELEASE_REPOSITORY_ID = 'jboss-releases-repository'
-        NEXUS_STAGING_PROFILE_ID = '2161b7b8da0080'
-        NEXUS_BUILD_PROMOTION_PROFILE_ID = 'ea49ccd6f174'
+        GIT_AUTHOR='dupliaka'
+        GIT_AUTHOR_CREDS_ID ='dupliaka' // username/password creds
+        BOT_AUTHOR='dupliaka-gh-bot'
+        BOT_AUTHOR_CREDS_ID='dupliaka-gh-bot' // username/password creds
+        GITHUB_TOKEN_CREDS_ID='dupliaka_gh_token' // secret text creds
     }
 
     stages {
